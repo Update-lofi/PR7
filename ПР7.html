@@ -1,0 +1,186 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ТРПО 7</title>
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__html"><h2 id="практическая-работа-№7-поиск-и-фильтрация">Практическая работа №7: Поиск и фильтрация</h2>
+<h3 id="задание-1.-поиск-задач">Задание 1. Поиск задач</h3>
+<h4 id="добавьте-форму-поиска-в-index.html">1.1. Добавьте форму поиска в <code>index.html</code></h4>
+<p>В любом удобном месте (например, под заголовком или в навигации) добавьте:</p>
+<pre class=" language-html"><code class="prism  language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">action</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>/search<span class="token punctuation">"</span></span> <span class="token attr-name">method</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>get<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>search-form<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>text<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>q<span class="token punctuation">"</span></span> <span class="token attr-name">placeholder</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>Поиск по задачам...<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>{{ search_query or <span class="token punctuation">'</span><span class="token punctuation">'</span> }}<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>button</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>submit<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span> Найти<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>button</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form</span><span class="token punctuation">&gt;</span></span>
+</code></pre>
+<h4 id="добавьте-маршрут-search-в-app.py">1.2. Добавьте маршрут <code>/search</code> в <code>app.py</code></h4>
+<pre class=" language-python"><code class="prism  language-python">@app<span class="token punctuation">.</span>route<span class="token punctuation">(</span><span class="token string">'/search'</span><span class="token punctuation">)</span>
+<span class="token keyword">def</span> <span class="token function">search</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    query <span class="token operator">=</span> request<span class="token punctuation">.</span>args<span class="token punctuation">.</span>get<span class="token punctuation">(</span><span class="token string">'q'</span><span class="token punctuation">,</span> <span class="token string">''</span><span class="token punctuation">)</span><span class="token punctuation">.</span>strip<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>lower<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">if</span> query<span class="token punctuation">:</span>
+        filtered_tasks <span class="token operator">=</span> <span class="token punctuation">[</span>task <span class="token keyword">for</span> task <span class="token keyword">in</span> tasks <span class="token keyword">if</span> query <span class="token keyword">in</span> task<span class="token punctuation">[</span><span class="token string">'text'</span><span class="token punctuation">]</span><span class="token punctuation">.</span>lower<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
+    <span class="token keyword">else</span><span class="token punctuation">:</span>
+        filtered_tasks <span class="token operator">=</span> tasks
+    <span class="token keyword">return</span> render_template<span class="token punctuation">(</span><span class="token string">'index.html'</span><span class="token punctuation">,</span> tasks<span class="token operator">=</span>filtered_tasks<span class="token punctuation">,</span> search_query<span class="token operator">=</span>query<span class="token punctuation">)</span>
+</code></pre>
+<p><strong>Проверьте:</strong> введите текст — должны остаться только задачи, содержащие этот текст (без учёта регистра).</p>
+<h2 id="практическая-работа-№8-сортировка-задач-дата-статус-приоритет">Практическая работа №8: Сортировка задач (дата, статус, приоритет)</h2>
+<p><strong>Цель:</strong> Добавить в приложение «Список дел» возможность сортировать задачи по разным критериям (дате, статусу выполнения, приоритету).</p>
+<p><strong>Время выполнения:</strong> 1 занятие (45–60 минут)</p>
+<hr>
+<h3 id="что-нужно-сделать">Что нужно сделать</h3>
+
+<table>
+<thead>
+<tr>
+<th>Функция</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Сортировка по дате</strong></td>
+<td>Сначала новые задачи, потом старые</td>
+</tr>
+<tr>
+<td><strong>Сортировка по статусу</strong></td>
+<td>Сначала активные (невыполненные), потом выполненные</td>
+</tr>
+<tr>
+<td><strong>Сортировка по приоритету</strong></td>
+<td>Сначала высокий, потом средний, потом низкий</td>
+</tr>
+<tr>
+<td><strong>Сортировка по алфавиту</strong></td>
+<td>Заголовки задач от А до Я</td>
+</tr>
+</tbody>
+</table><hr>
+<h3 id="задание-2.-сортировка-по-дате">Задание 2. Сортировка по дате</h3>
+<h4 id="добавьте-ссылки-сортировки-в-index.html">1.1. Добавьте ссылки сортировки в <code>index.html</code></h4>
+<p>В блоке фильтров добавьте:</p>
+<pre class=" language-html"><code class="prism  language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>a</span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>/sort/date<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span> По дате (новые)<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>a</span><span class="token punctuation">&gt;</span></span> |
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>a</span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>/sort/status<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span> По статусу<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>a</span><span class="token punctuation">&gt;</span></span> |
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>a</span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>/sort/priority<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span> По приоритету<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>a</span><span class="token punctuation">&gt;</span></span> |
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>a</span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>/sort/alpha<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span> По алфавиту<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>a</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
+</code></pre>
+<h4 id="добавьте-маршруты-в-app.py">1.2. Добавьте маршруты в <code>app.py</code></h4>
+<p><strong>Сортировка по дате (новые сверху):</strong></p>
+<pre class=" language-python"><code class="prism  language-python">@app<span class="token punctuation">.</span>route<span class="token punctuation">(</span><span class="token string">'/sort/date'</span><span class="token punctuation">)</span>
+<span class="token keyword">def</span> <span class="token function">sort_by_date</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span> 
+	<span class="token comment"># key=lambda t: t.get('date', '') — для каждой задачи берём поле 'date'</span>
+ <span class="token comment"># Если поля 'date' нет, используем пустую строку ''</span>
+ <span class="token comment"># reverse=True — сортируем от большей даты к меньшей (новые сверху)</span>
+    sorted_tasks <span class="token operator">=</span> <span class="token builtin">sorted</span><span class="token punctuation">(</span>tasks<span class="token punctuation">,</span> key<span class="token operator">=</span><span class="token keyword">lambda</span> t<span class="token punctuation">:</span> t<span class="token punctuation">.</span>get<span class="token punctuation">(</span><span class="token string">'date'</span><span class="token punctuation">,</span> <span class="token string">''</span><span class="token punctuation">)</span><span class="token punctuation">,</span> reverse<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> render_template<span class="token punctuation">(</span><span class="token string">'index.html'</span><span class="token punctuation">,</span> tasks<span class="token operator">=</span>sorted_tasks<span class="token punctuation">)</span>
+</code></pre>
+<p><strong>Как работает:</strong></p>
+<ul>
+<li>
+<p>Берём список задач <code>tasks</code></p>
+</li>
+<li>
+<p>Для каждой задачи извлекаем дату (строку в формате <code>YYYY-MM-DD</code>)</p>
+</li>
+<li>
+<p>Сортируем как строки: <code>2026-05-25</code> &gt; <code>2026-05-24</code>, поэтому новые оказываются сверху</p>
+</li>
+<li>
+<p>Передаём отсортированный список в шаблон</p>
+</li>
+</ul>
+<p><strong>Сортировка по статусу (сначала активные):</strong></p>
+<pre class=" language-python"><code class="prism  language-python">@app<span class="token punctuation">.</span>route<span class="token punctuation">(</span><span class="token string">'/sort/status'</span><span class="token punctuation">)</span>
+<span class="token keyword">def</span> <span class="token function">sort_by_status</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token comment"># False (не выполнено) идёт раньше True (выполнено)</span>
+     <span class="token comment"># key=lambda t: t.get('done', False) — берём значение 'done' (True или False)</span>
+ <span class="token comment"># В Python False == 0, True == 1, поэтому сначала идут задачи с False</span>
+    sorted_tasks <span class="token operator">=</span> <span class="token builtin">sorted</span><span class="token punctuation">(</span>tasks<span class="token punctuation">,</span> key<span class="token operator">=</span><span class="token keyword">lambda</span> t<span class="token punctuation">:</span> t<span class="token punctuation">.</span>get<span class="token punctuation">(</span><span class="token string">'done'</span><span class="token punctuation">,</span> <span class="token boolean">False</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> render_template<span class="token punctuation">(</span><span class="token string">'index.html'</span><span class="token punctuation">,</span> tasks<span class="token operator">=</span>sorted_tasks<span class="token punctuation">)</span>
+</code></pre>
+<p><strong>Как работает:</strong></p>
+<ul>
+<li>
+<p>У каждой задачи есть поле <code>done</code></p>
+</li>
+<li>
+<p><code>False</code> (не выполнено) имеет числовое значение <code>0</code></p>
+</li>
+<li>
+<p><code>True</code> (выполнено) имеет числовое значение <code>1</code></p>
+</li>
+<li>
+<p>При сортировке по возрастанию сначала идут <code>0</code>, потом <code>1</code></p>
+</li>
+<li>
+<p>Результат: сначала активные задачи, потом выполненные</p>
+</li>
+</ul>
+<p><strong>Сортировка по приоритету (высокий → средний → низкий):</strong></p>
+<pre class=" language-python"><code class="prism  language-python">@app<span class="token punctuation">.</span>route<span class="token punctuation">(</span><span class="token string">'/sort/priority'</span><span class="token punctuation">)</span>
+<span class="token keyword">def</span> <span class="token function">sort_by_priority</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+ <span class="token comment"># Задаём числовой вес каждому приоритету</span>
+ <span class="token comment"># высокий = 1 (самый маленький, будет первым)</span>
+ <span class="token comment"># средний = 2</span>
+ <span class="token comment"># низкий = 3 (самый большой, будет последним)</span>
+    priority_order <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token string">'высокий'</span><span class="token punctuation">:</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">'средний'</span><span class="token punctuation">:</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token string">'низкий'</span><span class="token punctuation">:</span> <span class="token number">3</span><span class="token punctuation">}</span>
+<span class="token comment"># Для каждой задачи:</span>
+ <span class="token comment"># - берём её priority (если нет — 'средний' по умолчанию)</span>
+ <span class="token comment"># - преобразуем в число по словарю priority_order</span>
+ <span class="token comment"># - сортируем по этому числу (от меньшего к большему)</span>
+    sorted_tasks <span class="token operator">=</span> <span class="token builtin">sorted</span><span class="token punctuation">(</span>
+        tasks<span class="token punctuation">,</span>
+        key<span class="token operator">=</span><span class="token keyword">lambda</span> t<span class="token punctuation">:</span> priority_order<span class="token punctuation">.</span>get<span class="token punctuation">(</span>t<span class="token punctuation">.</span>get<span class="token punctuation">(</span><span class="token string">'priority'</span><span class="token punctuation">,</span> <span class="token string">'средний'</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span>
+    <span class="token punctuation">)</span>
+    <span class="token keyword">return</span> render_template<span class="token punctuation">(</span><span class="token string">'index.html'</span><span class="token punctuation">,</span> tasks<span class="token operator">=</span>sorted_tasks<span class="token punctuation">)</span>
+</code></pre>
+<p><strong>Как работает:</strong></p>
+<ul>
+<li>
+<p>Высокий приоритет → число <code>1</code> → будет в начале списка</p>
+</li>
+<li>
+<p>Средний → число <code>2</code> → в середине</p>
+</li>
+<li>
+<p>Низкий → число <code>3</code> → в конце</p>
+</li>
+<li>
+<p><code>priority_order.get(t.get('priority', 'средний'), 2)</code> — если приоритет не распознан, используем <code>2</code> (средний)<br>
+<strong>Сортировка по алфавиту (А → Я):</strong></p>
+</li>
+</ul>
+<pre class=" language-python"><code class="prism  language-python">@app<span class="token punctuation">.</span>route<span class="token punctuation">(</span><span class="token string">'/sort/alpha'</span><span class="token punctuation">)</span>
+<span class="token keyword">def</span> <span class="token function">sort_by_alpha</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+ <span class="token comment"># key=lambda t: t.get('text', '').lower() — берём текст задачи</span>
+ <span class="token comment"># .lower() — приводим к нижнему регистру (чтобы А и а не различались)</span>
+ <span class="token comment"># сортируем в алфавитном порядке (A → Z, А → Я)</span>
+    sorted_tasks <span class="token operator">=</span> <span class="token builtin">sorted</span><span class="token punctuation">(</span>tasks<span class="token punctuation">,</span> key<span class="token operator">=</span><span class="token keyword">lambda</span> t<span class="token punctuation">:</span> t<span class="token punctuation">.</span>get<span class="token punctuation">(</span><span class="token string">'text'</span><span class="token punctuation">,</span> <span class="token string">''</span><span class="token punctuation">)</span><span class="token punctuation">.</span>lower<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> render_template<span class="token punctuation">(</span><span class="token string">'index.html'</span><span class="token punctuation">,</span> tasks<span class="token operator">=</span>sorted_tasks<span class="token punctuation">)</span>
+</code></pre>
+<p><strong>Как работает:</strong></p>
+<ul>
+<li>
+<p>Из каждой задачи извлекаем поле <code>text</code> (название задачи)</p>
+</li>
+<li>
+<p>Приводим его к нижнему регистру (чтобы «Апельсин» и «апельсин» были рядом)</p>
+</li>
+<li>
+<p>Сортируем по алфавиту</p>
+</li>
+<li>
+<p>Задачи, начинающиеся с одинаковой буквы, группируются</p>
+</li>
+</ul>
+</div>
+</body>
+
+</html>
