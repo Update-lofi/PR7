@@ -140,5 +140,10 @@ def sort_by_date():
     sorted_tasks = sorted(tasks, key=lambda t: t.get('date', ''), reverse=True)
     return render_template('index.html', tasks=sorted_tasks)
 
+@app.route('/sort/status')
+def sort_by_status():
+    sorted_tasks = sorted(tasks, key=lambda t: t.get('done', False))
+    return render_template('index.html', tasks=sorted_tasks)
+
 if __name__ == '__main__':
     app.run(debug=True)
