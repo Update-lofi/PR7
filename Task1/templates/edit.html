@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Редактировать задачу</title>
+    <style>
+        body { font-family: Arial; margin: 40px; }
+        input, select, button { padding: 8px; margin: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Редактирование задачи</h1>
+    
+    {% if message %}
+        <p style="color: red;">{{ message }}</p>
+    {% endif %}
+    
+    <form method="POST">
+        <input type="text" name="task" value="{{ task.text }}" required>
+        
+        <select name="priority">
+            <option value="высокий" {% if task.priority == 'высокий' %}selected{% endif %}>🔴 Высокий</option>
+            <option value="средний" {% if task.priority == 'средний' %}selected{% endif %}>🟡 Средний</option>
+            <option value="низкий" {% if task.priority == 'низкий' %}selected{% endif %}>🟢 Низкий</option>
+        </select>
+        
+        <button type="submit">Сохранить</button>
+        <a href="/">Отмена</a>
+    </form>
+</body>
+</html>

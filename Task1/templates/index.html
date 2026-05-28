@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Список дел</title>
+    <style>
+        body { font-family: Arial; margin: 40px; }
+        input, select, button { padding: 8px; margin: 5px; }
+        .high { color: red; font-weight: bold; }
+        .medium { color: orange; font-weight: bold; }
+        .low { color: green; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>Мои задачи</h1>
+    
+    <p>
+        🔴 Высоких: {{ tasks|selectattr('priority', 'equalto', 'высокий')|list|length }},
+        🟡 Средних: {{ tasks|selectattr('priority', 'equalto', 'средний')|list|length }},
+        🟢 Низких: {{ tasks|selectattr('priority', 'equalto', 'низкий')|list|length }}
+    </p>
+    
+    <p>Осталось задач: {{ tasks|selectattr('done', 'equalto', False)|list|length }}</p>
+    
+    <p>
+        <a href="/">Все</a> |
+        <a href="/active">Только активные</a> |
+        <a href="/completed">Только выполненные</a> |
+        <a href="/complete_all">Выполнить все</a> |
+        <a href="/uncomplete_all">Отменить все</a> |
+        <a href="/by_priority">По приоритету</a> |
+        <a href="/by_priority_active">Активные по приоритету</a>
+    </p>
+    
+    <ul>
+        {% for task in tasks %}
+            {% if filter is not defined or (filter == 'active' and not task.done) or (filter == 'completed' and task.done) %}
+            <li class="{% if task.priority == 'высокий' %}high{% elif task.priority == 'средний' %}medium{% else %}low{% endif %}">
+                {% if task.done %}
+                    <s>{{ task.text }}</s>
+                {% else %}
+                    {{ task.text }}
+                {% endif %}
+                
+                {% if task.priority == 'высокий' %}
+                    🔴
+                {% elif task.priority == 'средний' %}
+                    🟡
+                {% else %}
+                    🟢
+                {% endif %}
+                
+                — <small>{{ task.date }}</small>
+                <a href="/toggle/{{ loop.index0 }}">Выполнено</a>
+                <a href="/edit/{{ loop.index0 }}">Редактировать</a>
+                <a href="/delete/{{ loop.index0 }}">Удалить</a>
+            </li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+    
+    <h2>Добавить задачу</h2>
+    <form method="POST" action="/add">
+        <input type="text" name="task" placeholder="Новая задача" required>
+        
+        <select name="priority">
+            <option value="высокий">🔴 Высокий</option>
+            <option value="средний" selected>🟡 Средний</option>
+            <option value="низкий">🟢 Низкий</option>
+        </select>
+        
+        <button type="submit">Добавить</button>
+    </form>
+    
+    <p><a href="/clear_all">Очистить всё</a></p>
+</body>
+</html>
