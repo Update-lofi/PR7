@@ -154,5 +154,10 @@ def sort_by_priority():
     )
     return render_template('index.html', tasks=sorted_tasks)
 
+@app.route('/sort/alpha')
+def sort_by_alpha():
+    sorted_tasks = sorted(tasks, key=lambda t: t.get('text', '').lower())
+    return render_template('index.html', tasks=sorted_tasks)
+
 if __name__ == '__main__':
     app.run(debug=True)
