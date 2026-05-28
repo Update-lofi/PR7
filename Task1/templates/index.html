@@ -19,16 +19,22 @@
         🟢 Низких: {{ tasks|selectattr('priority', 'equalto', 'низкий')|list|length }}
     </p>
     
-    <p>Осталось задач: {{ tasks|selectattr('done', 'equalto', False)|list|length }}</p>
+       <p>Осталось задач: {{ tasks|selectattr('done', 'equalto', False)|list|length }}</p>
     
     <p>
         <a href="/">Все</a> |
         <a href="/active">Только активные</a> |
         <a href="/completed">Только выполненные</a> |
         <a href="/complete_all">Выполнить все</a> |
-        <a href="/uncomplete_all">Отменить все</a> |
-        <a href="/by_priority">По приоритету</a> |
-        <a href="/by_priority_active">Активные по приоритету</a>
+        <a href="/uncomplete_all">Отменить все</a>
+    </p>
+    
+    <!-- Ссылки сортировки -->
+    <p>
+        <a href="/sort/date">По дате (новые)</a> |
+        <a href="/sort/status">По статусу</a> |
+        <a href="/sort/priority">По приоритету</a> |
+        <a href="/sort/alpha">По алфавиту</a>
     </p>
     
     <ul>
