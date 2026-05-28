@@ -145,5 +145,14 @@ def sort_by_status():
     sorted_tasks = sorted(tasks, key=lambda t: t.get('done', False))
     return render_template('index.html', tasks=sorted_tasks)
 
+@app.route('/sort/priority')
+def sort_by_priority():
+    priority_order = {'высокий': 1, 'средний': 2, 'низкий': 3}
+    sorted_tasks = sorted(
+        tasks,
+        key=lambda t: priority_order.get(t.get('priority', 'средний'), 2)
+    )
+    return render_template('index.html', tasks=sorted_tasks)
+
 if __name__ == '__main__':
     app.run(debug=True)
