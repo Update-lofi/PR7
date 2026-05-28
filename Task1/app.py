@@ -135,5 +135,10 @@ def search():
         filtered_tasks = tasks
     return render_template('index.html', tasks=filtered_tasks, search_query=query)
 
+@app.route('/sort/date')
+def sort_by_date():
+    sorted_tasks = sorted(tasks, key=lambda t: t.get('date', ''), reverse=True)
+    return render_template('index.html', tasks=sorted_tasks)
+
 if __name__ == '__main__':
     app.run(debug=True)
