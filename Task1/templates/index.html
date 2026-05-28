@@ -72,5 +72,11 @@
     </form>
     
     <p><a href="/clear_all">Очистить всё</a></p>
+
+<form action="/search" method="get" class="search-form">
+    <input type="text" name="q" placeholder="Поиск по задачам..." value="{{ search_query or '' }}">
+    <button type="submit"> Найти</button>
+</form>
+
 </body>
 </html>
